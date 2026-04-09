@@ -23,12 +23,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GitFrog1111/claude-whip.git"
+    "url": "git+https://github.com/bilalbentoumi/claude-whip.git"
   },
   "bugs": {
-    "url": "https://github.com/GitFrog1111/claude-whip/issues"
+    "url": "https://github.com/bilalbentoumi/claude-whip/issues"
   },
-  "homepage": "https://github.com/GitFrog1111/claude-whip#readme",
+  "homepage": "https://github.com/bilalbentoumi/claude-whip#readme",
   "files": [
     "main.js",
     "preload.js",
