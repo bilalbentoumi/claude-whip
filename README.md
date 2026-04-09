@@ -1,4 +1,4 @@
-# badclaude
+# claude-whip
 
 ![Whip divider](assets/divider.png)
 
@@ -7,8 +7,8 @@ Sometimes claude code is going too shlow, and you must whip him into shape..
 ## Install + run
 
 ```bash
-npm install -g badclaude
-badclaude
+npm install -g claude-whip
+claude-whip
 ```
 
 ## Controls

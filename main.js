@@ -52,6 +52,12 @@ function refocusPreviousApp() {
           console.warn('refocus previous app (Cmd+Tab) failed:', err.message);
         }
       });
+    } else if (process.platform === 'linux') {
+      execFile('xdotool', ['key', 'alt+Tab'], err => {
+        if (err) {
+          console.warn('refocus previous app (Alt+Tab) failed:', err.message);
+        }
+      });
     }
   };
   setTimeout(run, delayMs);
@@ -66,7 +72,7 @@ function createTrayIconFallback() {
       return img;
     }
   }
-  console.warn('badclaude: icon/Template.png missing or invalid');
+  console.warn('claude-whip: icon/Template.png missing or invalid');
   return nativeImage.createEmpty();
 }
 
@@ -89,6 +95,9 @@ async function getTrayIcon() {
     }
     return createTrayIconFallback();
   }
+  if (process.platform === 'linux') {
+    return createTrayIconFallback(); // uses Template.png
+  }
   if (process.platform === 'darwin') {
     const file = path.join(iconDir, 'AppIcon.icns');
     if (fs.existsSync(file)) {
@@ -100,7 +109,7 @@ async function getTrayIcon() {
       } catch (e) {
         console.warn('AppIcon.icns Quick Look thumbnail failed:', e?.message || e);
       }
-      const tmp = path.join(os.tmpdir(), 'badclaude-tray.icns');
+      const tmp = path.join(os.tmpdir(), 'claude-whip-tray.icns');
       try {
         fs.copyFileSync(file, tmp);
         const t = await tryIcnsTrayImage(tmp);
@@ -192,6 +201,8 @@ function sendMacro() {
     sendMacroWindows(chosen);
   } else if (process.platform === 'darwin') {
     sendMacroMac(chosen);
+  } else if (process.platform === 'linux') {
+    sendMacroLinux(chosen);
   }
 }
 
@@ -236,6 +247,25 @@ function sendMacroMac(text) {
     if (err) {
       console.warn('mac macro failed (enable Accessibility for terminal/app):', err.message);
     }
+  });
+}
+
+function sendMacroLinux(text) {
+  // Ctrl+C interrupt, then type the text and press Enter
+  execFile('xdotool', ['key', 'ctrl+c'], err => {
+    if (err) {
+      console.warn('linux macro (Ctrl+C) failed:', err.message);
+      return;
+    }
+    execFile('xdotool', ['type', '--clearmodifiers', text], err2 => {
+      if (err2) {
+        console.warn('linux macro (type) failed:', err2.message);
+        return;
+      }
+      execFile('xdotool', ['key', 'Return'], err3 => {
+        if (err3) console.warn('linux macro (Enter) failed:', err3.message);
+      });
+    });
   });
 }
 
