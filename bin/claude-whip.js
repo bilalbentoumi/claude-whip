@@ -14,7 +14,7 @@ const appPath = path.resolve(__dirname, '..');
 
 const child = spawn(electronBinary, [appPath], {
   detached: true,
-  stdio: 'ignore',
+  stdio: process.platform === 'linux' ? 'inherit' : 'ignore',
   windowsHide: true,
 });
 
@@ -23,4 +23,6 @@ child.on('error', (err) => {
   process.exit(1);
 });
 
-child.unref();
+if (process.platform !== 'linux') {
+  child.unref();
+}
